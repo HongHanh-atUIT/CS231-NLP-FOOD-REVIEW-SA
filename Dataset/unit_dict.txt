@@ -1,0 +1,11 @@
+p	phút
+s	giây
+l	lít
+g	gam
+kg	ki_lo_gam
+h	giờ
+k	ngàn
+M	triệu
+B	tỷ
+m	mét
+km	ki_lo_met
