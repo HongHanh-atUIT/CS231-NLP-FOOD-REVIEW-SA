@@ -15,20 +15,24 @@ print("Path to dataset files:", path)
 - Chuẩn hóa văn bản như chuyển về chữ thường, xử lý các ký tự đặc biệt, từ kéo dài, emoji,...
 - Chuẩn hóa teencode, viết tắt.
 - Loại bỏ stopwords (optional do PhoBert thường không yêu cầu //cre ChatGPT chưa kiểm chứng legit)
-- Tách từ cho các mô hình `SVM, RNN, CNN-LSTM, BiLSTM` bằng ???. Với `PhoBert` thì không cần do đã có BPE xử lý.
+- Tách từ cho các mô hình `SVM, RNN, CNN-LSTM, BiLSTM` bằng `ViTokenizer` của pyvi. Với `PhoBert` thì không cần do đã có BPE xử lý.
 
 ## 3. Chia dữ liệu
-- Hiện tại dữ liệu đang có sẵn 2 tập train và test, cần tách thêm valid từ train để kiểm chứng kết quả khi huấn luyện, tránh overfit.
-- Tập valid chiếm ??? %
-- Dùng stratify để đảm bảo tỉ lệ nhãn
+- Hiện tại dữ liệu đang có sẵn 2 tập train và test, tập test chưa có nhãn nên sẽ không sử dụng.
+- Dùng train_test_split với random state là 2020, test size là 0.2, stratify = y để chia train và test từ file train và đảm bảo tỉ lệ nhãn.
+- Với các mô hình học sâu, khi huấn luyện, dùng thêm validation split là 0.2.
 
 ## 4. Huấn luyện mô hình
 ### 4.1 SVM
 - Dùng TF-IDF làm vectorizer
 - Huấn luyện và tinh chỉnh siêu tham số của SVM.
 ### 4.2 RNN, CNN-LSTM, BiLSTM
-- Dùng embedding có sẵn của fastText hoặc PhoW2V, W2V của VnCoreNLP (cần thống nhất)
-- Huấn luyện và tự định nghĩa cấu trúc các mô hình (cần nghiên cứu sâu hơn về kiến trúc)
+- Dùng embedding có sẵn của fastText.
+```python
+!wget https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.vi.300.vec.gz
+!gunzip cc.vi.300.vec.gz
+```
+- Huấn luyện và tự định nghĩa cấu trúc các mô hình.
 ### 4.3 PhoBert-base-v2
 - Dữ liệu đầu vào không được tách từ sẵn, phải ở dạng nguyên câu, chúng sẽ được xử lý và tách từ bằng `RDRSegmenter` và mã hóa bằng `BPE`.
 - Embedding sẽ được tạo trong chính mô hình bằng `BPE` và `Transformer`.
